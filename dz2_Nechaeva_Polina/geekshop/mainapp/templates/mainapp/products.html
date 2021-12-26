@@ -1,0 +1,84 @@
+{% extends 'mainapp/base.html'%}
+
+	{% block 'extra_class' %}
+	<a href="#" class="basket"></a>
+	{% endblock %}
+
+	{% block 'content' %}
+	<div class="details">
+		<div class="links clearfix">
+			<ul class="links-menu">
+				<li><a href="#" class="active">все</a></li>
+				<li><a href="#">дом</a></li>
+				<li><a href="#">офис</a></li>
+				<li><a href="#">модерн</a></li>
+				<li><a href="#">классика</a></li>
+			</ul>
+		</div>
+		<div class="details-products">
+			<div class="details-slider">
+				<div class="slider-product">
+					<img src="/static/img/slider1.jpg">
+				</div>
+				<div class="slider-control">
+					<div class="block">
+						<a href="#"><img src="/static/img/controll.jpg" alt="">
+							<div class="text"></div>
+						</a>
+					</div>
+					<div class="block">
+						<a href="#"><img src="/static/img/controll1.jpg" alt="">
+							<div class="text"></div>
+						</a>
+					</div>
+					<div class="block">
+						<a href="#"><img src="/static/img/controll2.jpg" alt="">
+							<div class="text"></div>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="description">
+				<h3 class="big-bold">Отличный стул</h3>
+				<h3 class="red">горячее предложение</h3>
+				<p class="price"> 2585.9 <span>руб</span></p>
+				<a href="#" class="red-button">
+					заказать <i class="fa fa-chevron-right" aria-hidden="true"></i>
+				</a>
+				<div class="description-text">
+					<p>Расположитесь комфортно.</p>
+					<p>Отличное качество материалов
+					позволит вам это.</p>
+					<p>Различные цвета.</p>
+					<p>Высочайший уровень
+					эргономики и прочность.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="related">
+			<div class="title clearfix">
+				<h2>Похожие продукты</h2>
+				<a class="explore" href="#">показать все <img src="/static/img/arrow.png" alt=""></a>
+			</div>
+			<div class="related-products clearfix">
+
+				{% for product in products %}
+				<div class="block">
+					<a href={{product.href}}><img src={{product.img_prod}} alt={{product.alt_txt_prod}}>
+						<div class="text">
+							<img src={{product.img_hover}} alt={{product.alt_txt_hover}}>
+							<h4>{{product.description}}</h4>
+							<p>{{product.extra_description}}</p>
+						</div>
+					</a>
+				</div>
+				{% endfor %}
+
+			</div>
+		</div>
+	</div>
+	<div class="clr"></div>
+	{% endblock %}
+
