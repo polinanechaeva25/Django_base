@@ -1,0 +1,36 @@
+{% extends 'mainapp/base.html'%}
+
+	{% block 'extra_class' %}
+	<a href="#" class="basket"></a>
+	{% endblock %}
+
+	{% block 'content_prod' %}
+	<h1>наши контакты</h1>
+	{% endblock %}
+
+	{%block 'content' %}
+	<div class="location">
+
+		{%for product in products%}
+		<div class="location-1">
+			<i class="fa fa-map-marker fa-5x"></i>
+			<h4>{{product.city}}</h4>
+			<div class="contacts">
+				<h5>Телефон</h5>
+				<p>{{product.phone_number}}</p>
+			</div>
+			<div class="contacts">
+				<h5>Email</h5>
+				<p>{{product.email}}</p>
+			</div>
+			<div class="contacts">
+				<h5>Адрес</h5>
+				<p>{{product.address}}</p>
+			</div>
+		</div>
+		{% endfor %}
+
+	</div>
+
+	<div class="clr"></div>
+	{% endblock %}
