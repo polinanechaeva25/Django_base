@@ -753,7 +753,7 @@ td:first-child {
 	font-weight: 700;
 }
 
-.control {
+.tab-control {
 	text-transform: uppercase;
 	list-style-type: none;
 	margin-top: 71px;
@@ -1040,8 +1040,8 @@ td:first-child {
 }
 .related-products a .text {
 	display: none;
-	height: 268px;
-	width: 268px;
+	height: 368px;
+	width: 368px;
 	background-color: #ffffff;
     opacity: 0.9;
     position: absolute;
@@ -1069,4 +1069,7 @@ td:first-child {
 }
 .related-products a:hover .text{
 	display: block;
+}
+.errorlist{
+    color: red;
 }

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Product, ProductCategory
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 
 MENU_LINKS = [
     {'href': 'index', 'active_if': ['index'], 'name': 'домой'},
@@ -22,7 +23,6 @@ def index(request):
 
 
 def contact(request):
-
     products = [
         {'city': 'Москва', 'phone_number': '+7-888-888-8888', 'email': 'info@geekshop.ru',
          'address': 'В пределах МКАД'},
@@ -44,12 +44,20 @@ def contact(request):
 
 def products(request, pk=None):
     if not pk:
-        selected_category = ProductCategory.objects.first()
+        selected_category = None
+        selected_category_dict = {"name": 'Всё', "href": reverse('products:index')}
     else:
         selected_category = get_object_or_404(ProductCategory, id=pk)
+        selected_category_dict = {"name": selected_category.name,
+                                  "href": reverse('products:category', args=[selected_category.id])}
 
-    products = Product.objects.filter(category=selected_category)
-    categories = ProductCategory.objects.all()
+    categories = [{"name": c.name, "href": reverse('products:category', args=[c.id])} for c in
+                  ProductCategory.objects.all()]
+    categories = [{"name": 'Всё', "href": reverse('products:index')}, *categories]
+    if selected_category:
+        products = Product.objects.filter(category=selected_category)
+    else:
+        products = Product.objects.all()
     image = [
         {'img': 'img/controll.jpg'},
 
@@ -65,5 +73,5 @@ def products(request, pk=None):
         'products': products,
         'categories': categories,
         'image': image,
-        'selected_category': selected_category
+        'selected_category': selected_category_dict
     })
