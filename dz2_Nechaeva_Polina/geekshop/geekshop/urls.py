@@ -10,6 +10,7 @@ urlpatterns = [
     path('contact/', mainapp_views.contact, name='contact'),
     path('products/', include('mainapp.urls', namespace='products')),
     path('auth/', include('authapp.urls', namespace='auth')),
+    path('cart/', include('cartapp.urls', namespace='cart')),
     path('admin/', admin.site.urls),
 ]
 

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Product, ProductCategory
+from cartapp.models import Cart
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 
@@ -12,6 +13,9 @@ MENU_LINKS = [
 
 def index(request):
     products = Product.objects.all()[:3]
+    cart = []
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user)
 
     return render(request, 'mainapp/index.html', context={
         'date': 'сегодняшняя дата: ',
@@ -19,6 +23,7 @@ def index(request):
         'title': 'магазин',
         'class_name': 'slider',
         'products': products,
+        'cart': cart,
     })
 
 
@@ -33,16 +38,25 @@ def contact(request):
         {'city': 'Москва', 'phone_number': '+7-888-888-8888', 'email': 'info@geekshop.ru',
          'address': 'В пределах МКАД'},
     ]
+    cart = []
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user)
+
     return render(request, 'mainapp/contact.html', context={
         'date': 'сегодняшняя дата: ',
         'menu_links': MENU_LINKS,
         'title': 'контакты',
         'class_name': 'hero',
         'products': products,
+        'cart': cart,
     })
 
 
 def products(request, pk=None):
+    cart = []
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user)
+
     if not pk:
         selected_category = None
         selected_category_dict = {"name": 'Всё', "href": reverse('products:index')}
@@ -55,9 +69,9 @@ def products(request, pk=None):
                   ProductCategory.objects.all()]
     categories = [{"name": 'Всё', "href": reverse('products:index')}, *categories]
     if selected_category:
-        products = Product.objects.filter(category=selected_category)
+        products = Product.objects.filter(category=selected_category)[:2]
     else:
-        products = Product.objects.all()
+        products = Product.objects.all()[:2]
     image = [
         {'img': 'img/controll.jpg'},
 
@@ -73,5 +87,6 @@ def products(request, pk=None):
         'products': products,
         'categories': categories,
         'image': image,
-        'selected_category': selected_category_dict
+        'selected_category': selected_category_dict,
+        'cart': cart,
     })

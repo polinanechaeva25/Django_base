@@ -18,6 +18,16 @@
         </a>
     </li>
     {% endif %}
+    <li>
+        <a href="{% url 'cart:view' %}" >
+            <span>
+                Корзина /{% if cart %}
+                            {{ cart.0.total_cost|floatformat:0 }} руб
+                            ({{ cart.0.total_quantity }} шт)
+                        {% endif %}
+            </span>
+        </a>
+    </li>
 
     {% if user.is_authenticated %}
     <li>

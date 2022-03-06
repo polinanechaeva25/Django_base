@@ -4,14 +4,15 @@
 <a href="#" class="basket"></a>
 {% endblock %}
 
-    {% block 'content' %}
-    <div class="details">
+{% block 'content' %}
+<div class="details">
     <div class="links clearfix">
         <ul class="links-menu">
 
             {% for category in categories %}
             <li><a href="{{ category.href }}"
-                   class="{% if category.name == selected_category.name %} active {% endif %}">{{category.name}}</a></li>
+                   class="{% if category.name == selected_category.name %} active {% endif %}">{{category.name}}</a>
+            </li>
             {% endfor %}
 
         </ul>
@@ -19,7 +20,9 @@
 
     <div class="details-products">
         {% if products %}
-        {% with product=products.0 %}
+
+<!--        {% with product=products.0 %}-->
+        {% for product in products %}
         <div class="details-slider">
             <div class="slider-product">
                 <img src="/media/{{ product.image }}">
@@ -30,13 +33,15 @@
             <h3 class="big-bold">{{product.name}}</h3>
             <h3 class="red">{{product.short_description}}</h3>
             <p class="price">{{product.price}} <span>руб</span></p>
-            <a href="#" class="red-button">
+            <a href="{% url 'cart:add' product.pk %}" class="red-button">
                 заказать <i class="fa fa-chevron-right" aria-hidden="true"></i>
             </a>
             <div class="description-text">
                 {{product.description|linebreaks}}
             </div>
-            {% endwith %}
+        </div>
+        {% endfor %}
+<!--            {% endwith %}-->
 
             {% else %}
             <div class="details-slider">
@@ -55,17 +60,21 @@
                 </div>
             </div>
             {% endif %}
-        </div>
+
 
         {% if products %}
         <div class="related">
+
             <div class="title clearfix">
                 <h2>Похожие продукты</h2>
+                <a class="explore" href="#">показать все <img src="/static/img/arrow.png" alt=""></a>
+            </div>
+            <div class="related-products clearfix">
 
-                <div class="related-products clearfix">
                 {% for product in products %}
                 <div style="width:270px ; height:270px" class="block">
-                    <a href="#"><img src="/media/{{ product.image }}" alt="{{product.short_description}}">
+                    <a href="{% url 'cart:add' product.pk %}"><img src="/media/{{ product.image }}"
+                                                                   alt="{{product.short_description}}">
                         <div style="width:270px ; height:270px" class="text">
                             <img src='/static/img/icon-hover.png' alt="img">
                             <h3>{{ product.category.name }}</h3>
@@ -75,16 +84,11 @@
                     </a>
                 </div>
                 {% endfor %}
-                </div>
-            </div>
 
-            <div>
-                <a class="explore" href="#">показать все <img src="/static/img/arrow.png" alt=""></a>
             </div>
 
         </div>
         {% endif %}
     </div>
-
     <div class="clr"></div>
     {% endblock %}
