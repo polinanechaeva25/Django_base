@@ -1,43 +1,43 @@
 {% extends 'mainapp/base.html'%}
 
-	{% block 'content_prod' %}
-	<div class="text-slider">
-		<h3 class="green">тенденции</h3>
-		<h3 class="big"> удобные стулья</h3>
-		<p>Новый уровень комфорта. Отличные характеристики.</p>
-		<a href="#" class="button-order">заказать <img src="/static/img/arrow.png" alt=""></a>
-	</div>
-	<div class="navi">
-		<a href="#"></a><a href="#"></a><a href="#"></a>
-	</div>
-	{% endblock %}
+{% block 'content_prod' %}
+<div class="text-slider">
+    <h3 class="green">тенденции</h3>
+    <h3 class="big"> удобные стулья</h3>
+    <p>Новый уровень комфорта. Отличные характеристики.</p>
+    <a href="#" class="button-order">заказать <img src="/static/img/arrow.png" alt=""></a>
+</div>
+<div class="navi">
+    <a href="#"></a><a href="#"></a><a href="#"></a>
+</div>
+{% endblock %}
 
-	{%block 'content' %}
-		<div class="featured">
-			<div class="featured-menu">
-					<a class="active" href="#">Популярные</a><a href="#">Новинки</a>
-			</div>
-			<a class="explore" href="#">показать все <img src="/static/img/arrow.png" alt=""></a>
-			<div class="clearfix">
-			</div>
-			<div class="tab-content">
+{%block 'content' %}
+<div class="featured">
+    <div class="featured-menu">
+        <a class="active" href="#">Популярные</a><a href="#">Новинки</a>
+    </div>
+    <a class="explore" href="#">показать все <img src="/static/img/arrow.png" alt=""></a>
+    <div class="clearfix">
+    </div>
+    <div class="tab-content">
 
-				{%for product in products%}
-				<div class="block">
-					<a href="#"><img style="width:270px" src="/media/{{product.image}}" alt="{{product.short_description}}">
-						<div class="text">
-							<img src='/static/img/icon-hover.png' alt='img'>
-							<h3>{{ product.category.name }}</h3>
-							<h4>{{product.name}}</h4>
-							<p>{{product.description}}</p>
-						</div>
-					</a>
-				</div>
-				{% endfor %}
+        {%for product in products%}
+        <div class="block">
+            <a href="#"><img style="width:270px" src="/media/{{ product.image }}" alt="{{product.short_description}}">
+                <div class="text">
+                    <img src='/static/img/icon-hover.png' alt='img'>
+                    <h3>{{ product.category.name }}</h3>
+                    <h4>{{product.name}}</h4>
+                    <p>{{product.description}}</p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
 
-			</div>
-		</div>
+    </div>
+</div>
 
-		<div class="clr"></div>
-	{% endblock %}
+<div class="clr"></div>
+{% endblock %}
 

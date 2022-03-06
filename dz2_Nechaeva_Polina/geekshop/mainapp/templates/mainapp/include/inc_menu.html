@@ -1,13 +1,45 @@
 <ul class="menu">
     {% for link in menu_links %}
-       <li> <a href="{% url link.href %}"
-            {% with url=request.resolver_match.view_name %}
-                {% if  url in link.active_if %}
-                    class="active"
-                {% endif %}>
-            {% endwith %}
-           {{link.name}}
-            </a>
-       </li>
+    <li><a href="{% url link.href %}"
+           {% with url=request.resolver_match.view_name %}
+           {% if url in link.active_if %}
+           class="active"
+           {% endif %}>
+        {% endwith %}
+        {{link.name}}
+    </a>
+    </li>
     {% endfor %}
+
+    {% if user.is_authenticated %}
+    <li>
+        <a href="{% url 'auth:edit' %}">
+            {{ user.first_name|default:'Пользователь' }}
+        </a>
+    </li>
+    {% endif %}
+    <li>
+        <a href="{% url 'cart:view' %}" >
+            <span>
+                Корзина /{% if cart %}
+                            {{ cart.0.total_cost|floatformat:0 }} руб
+                            ({{ cart.0.total_quantity }} шт)
+                        {% endif %}
+            </span>
+        </a>
+    </li>
+
+    {% if user.is_authenticated %}
+    <li>
+        <a href="{% url 'auth:logout' %}">выйти</a>
+    </li>
+    {% else %}
+    <li>
+        <a href="{% url 'auth:login' %}">войти</a>
+    </li>
+    <li>
+        <a href="{% url 'auth:register' %}">зарегистрироваться</a>
+    </li>
+    {% endif %}
+
 </ul>
