@@ -1,0 +1,38 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block 'content' %}
+<div class="details">
+    <div class="links clearfix">
+        <ul class="links-menu">
+
+
+        </ul>
+    </div>
+
+    <div class="details-products">
+        <div class="details-slider">
+            <div class="slider-product">
+                <img src="/media/{{ product.image }}"
+                     alt="{{ product.short_desc }}" style="width:450px;height:450px;">
+            </div>
+        </div>
+
+        <div class="description">
+            <h3 class="big-bold">{{ product.name }}</h3>
+            <br>
+            <p class="price"> {{ product.price }} <span>руб</span></p>
+            <a href="{% url 'cart:add' product.pk %}" class="red-button">
+                заказать
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </a>
+            <div class="description-text">
+                {{ product.description }}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="clr"></div>
+{% endblock %}
