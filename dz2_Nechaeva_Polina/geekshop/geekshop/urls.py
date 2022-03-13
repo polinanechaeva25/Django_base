@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path
 from mainapp import views as mainapp_views
 from django.conf import settings
@@ -11,7 +10,7 @@ urlpatterns = [
     path('products/', include('mainapp.urls', namespace='products')),
     path('auth/', include('authapp.urls', namespace='auth')),
     path('cart/', include('cartapp.urls', namespace='cart')),
-    path('admin/', admin.site.urls),
+    path('admin/', include('adminapp.urls', namespace='admin'))
 ]
 
 if settings.DEBUG:

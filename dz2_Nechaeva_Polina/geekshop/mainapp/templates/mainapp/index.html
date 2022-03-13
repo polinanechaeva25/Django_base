@@ -5,7 +5,7 @@
     <h3 class="green">тенденции</h3>
     <h3 class="big"> удобные стулья</h3>
     <p>Новый уровень комфорта. Отличные характеристики.</p>
-    <a href="#" class="button-order">заказать <img src="/static/img/arrow.png" alt=""></a>
+    <a href="{% url 'products:index' %}" class="button-order">заказать <img src="/static/img/arrow.png" alt=""></a>
 </div>
 <div class="navi">
     <a href="#"></a><a href="#"></a><a href="#"></a>
@@ -17,15 +17,15 @@
     <div class="featured-menu">
         <a class="active" href="#">Популярные</a><a href="#">Новинки</a>
     </div>
-    <a class="explore" href="#">показать все <img src="/static/img/arrow.png" alt=""></a>
+    <a class="explore" href="{% url 'products:category' 0 %}">показать все <img src="/static/img/arrow.png" alt=""></a>
     <div class="clearfix">
     </div>
     <div class="tab-content">
 
         {%for product in products%}
         <div class="block">
-            <a href="#"><img style="width:270px" src="/media/{{ product.image }}" alt="{{product.short_description}}">
-                <div class="text">
+            <a href="#"><img style="width:370px;height:370px;" src="/media/{{ product.image }}" alt="{{product.short_description}}">
+                <div class="text" style="width:370px;height:370px;">
                     <img src='/static/img/icon-hover.png' alt='img'>
                     <h3>{{ product.category.name }}</h3>
                     <h4>{{product.name}}</h4>

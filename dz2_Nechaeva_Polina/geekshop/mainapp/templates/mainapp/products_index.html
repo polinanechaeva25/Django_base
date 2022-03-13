@@ -1,0 +1,69 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block 'content' %}
+
+		<div class="details">
+			<div class="links clearfix">
+				<ul class="links-menu">
+
+					<li><a href="{% url 'products:category' 0 %}"
+						   class="{% if selected_category.name == 'Всё' %} active {% endif %}">всё</a></li>
+
+					{% for category in categories %}
+
+					<li><a href="{% url 'products:category' category.id %}">{{ category }}</a></li>
+
+					{% endfor %}
+
+				</ul>
+			</div>
+
+			<div class="details-products">
+				<div class="details-slider">
+					<div class="slider-product">
+						<img src="/media/{{ hot_product.image }}" style="width:450px;height:450px;">
+					</div>
+				</div>
+
+				<div class="description">
+					<h3 class="big-bold">{{hot_product}}</h3>
+					<h3 class="red">горячее предложение</h3>
+					<p class="price"> {{hot_product.price}} <span>руб</span></p>
+					<a href="{% url 'products:product' hot_product.id %}" class="red-button">
+						заказать <i class="fa fa-chevron-right" aria-hidden="true"></i>
+					</a>
+					<div class="description-text">
+						<p>{{hot_product.short_description}}</p>
+						<p>{{hot_product.description}}.</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="related">
+				<div class="title clearfix">
+					<h2>Похожие продукты</h2>
+					<a class="explore" href="{% url 'products:category' 0 %}">показать все
+						<img src="/static/img/arrow.png" alt=""></a>
+				</div>
+				<div class="related-products clearfix">
+					{%for product in same_products %}
+					<div class="block">
+					<a href="{% url 'products:product' product.id %}">
+					  <img src="/media/{{ product.image }}" alt="{{ product.short_desc }}" style="width:370px;height:370px;">
+					  <div class="text">
+						  <img src="{% static 'img/icon-hover.png' %}" alt="hover">
+						<h4>{{ product.name }}</h4>
+						<p>{{ product.description }}</p>
+					  </div>
+					</a>
+				  </div>
+					{%endfor%}
+				</div>
+			</div>
+		</div>
+
+		<div class="clr"></div>
+
+	</div>
+
+{% endblock %}

@@ -1,6 +1,14 @@
-<p>
-    Корзины пока нет!
-</p>
-{% for product in cart %}
-    {{ product}}
-{% endfor %}
+{% extends 'cartapp/base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <div class="basket_list">
+        {% include 'cartapp/includes/inc_cart_list.html' %}
+    </div>
+    <button class="button-17" style="margin: 0px 0px 30px 0px;">
+        <a href="{% url 'index' %}" class="text-simple" >
+            на главную
+        </a>
+    </button>
+{% endblock %}
