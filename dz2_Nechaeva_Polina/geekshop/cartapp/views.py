@@ -56,8 +56,7 @@ def cart_edit(request, pk, quantity):
     else:
         new_cart_item.delete()
 
-    cart_items = Cart.objects.filter(user=request.user). \
-        order_by('product__category')
+    cart_items = Cart.objects.filter(user=request.user).order_by('product__category')
 
     content = {
         'cart_items': cart_items,
@@ -66,3 +65,5 @@ def cart_edit(request, pk, quantity):
     result = render_to_string('cartapp/includes/inc_cart_list.html', content)
 
     return JsonResponse({'result': result})
+
+

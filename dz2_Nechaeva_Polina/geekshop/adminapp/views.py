@@ -2,40 +2,69 @@ from authapp.models import ShopUser
 from django.shortcuts import get_object_or_404, render, HttpResponseRedirect
 from mainapp.models import Product, ProductCategory
 from django.contrib.auth.decorators import user_passes_test
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from authapp.forms import ShopUserRegisterForm
-from adminapp.forms import ShopUserAdminEditForm, ProductCategoryEditForm
+from adminapp.forms import ShopUserAdminEditForm, ProductCategoryEditForm, ProductEditForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.generic.list import ListView
+from django.utils.decorators import method_decorator
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.detail import DetailView
+from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+
+# @user_passes_test(lambda u: u.is_superuser)
+# def users(request, page=1):
+#     title = 'админка/пользователи'
+#
+#     users_list = ShopUser.objects.all().order_by('-is_active', '-is_superuser', '-is_staff', 'username')
+#
+#     paginator = Paginator(users_list, 2)
+#
+#     content = {
+#         'title': title,
+#         'objects': users_list,
+#         'users_paginator': paginator.page(page),
+#     }
+#
+#     return render(request, 'adminapp/users.html', content)
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def users(request):
-    title = 'админка/пользователи'
+class UsersListView(ListView):
+    model = ShopUser
+    template_name = 'adminapp/users.html'
+    context_object_name = 'objects'
+    paginate_by = 2
 
-    users_list = ShopUser.objects.all().order_by('-is_active', '-is_superuser', '-is_staff', 'username')
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, *args, **kwargs):
 
-    content = {
-        'title': title,
-        'objects': users_list
-    }
-
-    return render(request, 'adminapp/users.html', content)
+        return super().dispatch(*args, **kwargs)
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def user_create(request):
-    title = 'пользователи/создание'
+# @user_passes_test(lambda u: u.is_superuser)
+# def user_create(request):
+#     title = 'пользователи/создание'
+#
+#     if request.method == 'POST':
+#         user_form = ShopUserRegisterForm(request.POST, request.FILES)
+#         if user_form.is_valid():
+#             user_form.save()
+#             return HttpResponseRedirect(reverse('admin:users'))
+#     else:
+#         user_form = ShopUserRegisterForm()
+#
+#     content = {'title': title, 'update_form': user_form}
+#
+#     return render(request, 'adminapp/user_update.html', content)
 
-    if request.method == 'POST':
-        user_form = ShopUserRegisterForm(request.POST, request.FILES)
-        if user_form.is_valid():
-            user_form.save()
-            return HttpResponseRedirect(reverse('admin:users'))
-    else:
-        user_form = ShopUserRegisterForm()
 
-    content = {'title': title, 'update_form': user_form}
-
-    return render(request, 'adminapp/user_update.html', content)
+class UserCreateView(CreateView):
+    model = ShopUser
+    template_name = 'adminapp/user_update.html'
+    success_url = reverse_lazy('admin:users')
+    fields = '__all__'
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -88,55 +117,93 @@ def categories(request):
     return render(request, 'adminapp/categories.html', content)
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def category_create(request):
-    title = 'категории/создание'
+# @user_passes_test(lambda u: u.is_superuser)
+# def category_create(request):
+#     title = 'категории/создание'
+#
+#     if request.method == 'POST':
+#         category_form = ProductCategoryEditForm(request.POST, request.FILES)
+#         if category_form.is_valid():
+#             category_form.save()
+#             return HttpResponseRedirect(reverse('admin:categories'))
+#     else:
+#         category_form = ProductCategoryEditForm()
+#
+#     content = {'title': title, 'update_form': category_form}
+#
+#     return render(request, 'adminapp/category_update.html', content)
+#
+#
+# @user_passes_test(lambda u: u.is_superuser)
+# def category_update(request, pk):
+#     title = 'категории/редактирование'
+#
+#     edit_category = get_object_or_404(ProductCategory, pk=pk)
+#     if request.method == 'POST':
+#         edit_form = ProductCategoryEditForm(request.POST, request.FILES, instance=edit_category)
+#         if edit_form.is_valid():
+#             edit_form.save()
+#             return HttpResponseRedirect(reverse('admin:category_update', args=[edit_category.pk]))
+#     else:
+#         edit_form = ProductCategoryEditForm(instance=edit_category)
+#
+#     content = {'title': title, 'update_form': edit_form}
+#
+#     return render(request, 'adminapp/category_update.html', content)
+#
 
-    if request.method == 'POST':
-        category_form = ProductCategoryEditForm(request.POST, request.FILES)
-        if category_form.is_valid():
-            category_form.save()
-            return HttpResponseRedirect(reverse('admin:categories'))
-    else:
-        category_form = ProductCategoryEditForm()
 
-    content = {'title': title, 'update_form': category_form}
-
-    return render(request, 'adminapp/category_update.html', content)
+class ProductCategoryCreateView(CreateView):
+    model = ProductCategory
+    template_name = 'adminapp/category_update.html'
+    success_url = reverse_lazy('admin:categories')
+    fields = '__all__'
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def category_update(request, pk):
-    title = 'категории/редактирование'
+class ProductCategoryUpdateView(UpdateView):
+    model = ProductCategory
+    template_name = 'adminapp/category_update.html'
+    success_url = reverse_lazy('admin:categories')
+    fields = '__all__'
 
-    edit_category = get_object_or_404(ProductCategory, pk=pk)
-    if request.method == 'POST':
-        edit_form = ProductCategoryEditForm(request.POST, request.FILES, instance=edit_category)
-        if edit_form.is_valid():
-            edit_form.save()
-            return HttpResponseRedirect(reverse('admin:category_update', args=[edit_category.pk]))
-    else:
-        edit_form = ProductCategoryEditForm(instance=edit_category)
-
-    content = {'title': title, 'update_form': edit_form}
-
-    return render(request, 'adminapp/category_update.html', content)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'категории/редактирование'
+        return context
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def category_delete(request, pk):
-    title = 'категории/удаление'
+# @user_passes_test(lambda u: u.is_superuser)
+# def category_delete(request, pk):
+#     title = 'категории/удаление'
+#
+#     category = get_object_or_404(ProductCategory, pk=pk)
+#
+#     if request.method == 'POST':
+#         category.is_active = False
+#         category.save()
+#         return HttpResponseRedirect(reverse('admin:categories'))
+#
+#     content = {'title': title, 'category_to_delete': category}
+#
+#     return render(request, 'adminapp/category_delete.html', content)
 
-    category = get_object_or_404(ProductCategory, pk=pk)
 
-    if request.method == 'POST':
-        category.is_active = False
-        category.save()
-        return HttpResponseRedirect(reverse('admin:categories'))
+class ProductCategoryDeleteView(DeleteView):
+    model = ProductCategory
+    template_name = 'adminapp/category_delete.html'
+    success_url = reverse_lazy('admin:categories')
+    context_object_name = 'object'
 
-    content = {'title': title, 'category_to_delete': category}
+    def delete(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
 
-    return render(request, 'adminapp/category_delete.html', content)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -157,19 +224,93 @@ def products(request, pk):
 
 @user_passes_test(lambda u: u.is_superuser)
 def product_create(request, pk):
-    pass
+    title = 'продукт/создание'
+    category = get_object_or_404(ProductCategory, pk=pk)
+
+    if request.method == 'POST':
+        product_form = ProductEditForm(request.POST, request.FILES)
+        if product_form.is_valid():
+            product_form.save()
+            return HttpResponseRedirect(reverse('admin:products', args=[pk]))
+    else:
+        product_form = ProductEditForm(initial={'category': category})
+    content = {'title': title,
+               'update_form': product_form,
+               'category': category
+               }
+
+    return render(request, 'adminapp/product_update.html', content)
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def product_read(request, pk):
-    pass
+# @user_passes_test(lambda u: u.is_superuser)
+# def product_read(request, pk):
+#     title = 'продукт/подробнее'
+#     product = get_object_or_404(Product, pk=pk)
+#     content = {'title': title, 'object': product, }
+#
+#     return render(request, 'adminapp/product_read.html', content)
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'adminapp/product_read.html'
+    # context_object_name = 'objects'
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def product_update(request, pk):
-    pass
+    title = 'продукт/редактирование'
+
+    edit_product = get_object_or_404(Product, pk=pk)
+
+    if request.method == 'POST':
+        edit_form = ProductEditForm(request.POST, request.FILES, instance=edit_product)
+        if edit_form.is_valid():
+            edit_form.save()
+            return HttpResponseRedirect(reverse('admin:product_update', args=[edit_product.pk]))
+    else:
+        edit_form = ProductEditForm(instance=edit_product)
+
+    content = {'title': title,
+               'update_form': edit_form,
+               'category': edit_product.category
+               }
+
+    return render(request, 'adminapp/product_update.html', content)
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def product_delete(request, pk):
-    pass
+    title = 'продукт/удаление'
+
+    product = get_object_or_404(Product, pk=pk)
+
+    if request.method == 'POST':
+        product.is_active = False
+        product.save()
+        return HttpResponseRedirect(reverse('admin:products', args=[product.category.pk]))
+
+    content = {'title': title, 'product_to_delete': product}
+
+    return render(request, 'adminapp/product_delete.html', content)
+
+
+@login_required
+def admin_edit_products_quantity(request, pk, quantity):
+    quantity = int(quantity)
+    new_product = Product.objects.get(pk=pk)
+
+    if quantity > 0:
+        new_product.quantity = quantity
+        new_product.save()
+    else:
+        new_product.is_active = False
+
+    content = {
+        'objects': Product.objects.all().filter(category = new_product.category).order_by('name'),
+
+    }
+
+    result = render_to_string('adminapp/includes/inc_products_quantity.html', content)
+
+    return JsonResponse({'result': result})

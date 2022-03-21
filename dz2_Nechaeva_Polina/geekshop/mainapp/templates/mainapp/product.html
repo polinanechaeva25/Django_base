@@ -6,6 +6,14 @@
     <div class="links clearfix">
         <ul class="links-menu">
 
+            <li><a href="{% url 'products:category' 0 %}">всё</a>
+            </li>
+
+            {% for category in links_menu %}
+            <li><a href="{% url 'products:category' category.id %}"
+            class="{% if category.name == selected_category.name %} active {% endif %}">{{category.name}}</a>
+            </li>
+            {% endfor %}
 
         </ul>
     </div>
