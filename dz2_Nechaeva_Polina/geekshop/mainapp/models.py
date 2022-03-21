@@ -19,6 +19,7 @@ class Product(models.Model):
     price_with_discount = models.DecimalField(verbose_name='цена со скидкой', max_digits=8, decimal_places=2, default=0)
     quantity = models.PositiveIntegerField(verbose_name='количество на складе', default=0)
     image = models.ImageField(upload_to='products_images', blank=True)
+    is_active = models.BooleanField(verbose_name='активна', default=True)
 
     def __str__(self):
         return self.name

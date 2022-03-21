@@ -22,9 +22,25 @@
         </ul>
     </div>
 
-    <div class="details-products {% if products|length == 2%} new_2 {% elif products|length == 3%} new_3 {% endif%}">
+    <div class="details-products {% if products|length > 1%} new_2 {% endif%}">
+
         {% if products %}
-            {% for product in products %}
+            {% if products_paginator.has_previous %}
+                <a href="{% url 'products:page' category_id products_paginator.previous_page_number %}">
+                <
+                </a>
+                {% endif %}
+                <span class="current">
+                страница {{ products_paginator.number }} из
+                {{ products_paginator.paginator.num_pages }}
+                </span>
+                {% if products_paginator.has_next %}
+                <a href="{% url 'products:page' category_id products_paginator.next_page_number %}">
+                >
+                </a>
+            {% endif %}
+
+            {% for product in products_paginator %}
             <div class="details-slider">
                 <div class="slider-product">
                     <img src="/media/{{ product.image }}" style="width:450px;height:450px;">
@@ -77,7 +93,7 @@
         </div>
 
         <div class="related-products clearfix">
-            {% for product in products %}
+            {% for product in products_same %}
             <div class="block">
                 <a href="{% url 'cart:add' product.pk %}">
                     <img src="/media/{{ product.image }}" alt="{{product.short_description}}"
