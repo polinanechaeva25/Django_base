@@ -67,24 +67,36 @@ class UserCreateView(CreateView):
     fields = '__all__'
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def user_update(request, pk):
-    title = 'пользователи/редактирование'
+# @user_passes_test(lambda u: u.is_superuser)
+# def user_update(request, pk):
+#     title = 'пользователи/редактирование'
+#
+#     edit_user = get_object_or_404(ShopUser, pk=pk)
+#     if request.method == 'POST':
+#         edit_form = ShopUserAdminEditForm(request.POST, request.FILES, \
+#                                           instance=edit_user)
+#         if edit_form.is_valid():
+#             edit_form.save()
+#             return HttpResponseRedirect(reverse('admin:user_update', \
+#                                                 args=[edit_user.pk]))
+#     else:
+#         edit_form = ShopUserAdminEditForm(instance=edit_user)
+#
+#     content = {'title': title, 'update_form': edit_form}
+#
+#     return render(request, 'adminapp/user_update.html', content)
 
-    edit_user = get_object_or_404(ShopUser, pk=pk)
-    if request.method == 'POST':
-        edit_form = ShopUserAdminEditForm(request.POST, request.FILES, \
-                                          instance=edit_user)
-        if edit_form.is_valid():
-            edit_form.save()
-            return HttpResponseRedirect(reverse('admin:user_update', \
-                                                args=[edit_user.pk]))
-    else:
-        edit_form = ShopUserAdminEditForm(instance=edit_user)
 
-    content = {'title': title, 'update_form': edit_form}
+class UserUpdateView(UpdateView):
+    model = ShopUser
+    template_name = 'adminapp/user_update.html'
+    success_url = reverse_lazy('admin:users')
+    fields = '__all__'
 
-    return render(request, 'adminapp/user_update.html', content)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'пользователи/редактирование'
+        return context
 
 
 @user_passes_test(lambda u: u.is_superuser)
