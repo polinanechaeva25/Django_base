@@ -1,0 +1,14 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?0J/QvtC00YLQstC10YDQttC00LXQvdC40LUg0YPRh9C10YLQvdC+0Lkg0LfQsNC/?=
+ =?utf-8?b?0LjRgdC4IGZm?=
+From: django@geekshop.local
+To: nasta@mail.ru
+Date: Tue, 22 Mar 2022 13:46:05 -0000
+Message-ID: <164795676531.4904.16986844378943293772@LAPTOP-ISJ4C6EN>
+
+Для подтверждения учетной записи ff на портале     http://localhost:8000 перейдите по ссылке: 
+http://localhost:8000/auth/verify/nasta@mail.ru/4e4b4d5d2d3da224159868c36dcd29a9b4e520dd/
+-------------------------------------------------------------------------------

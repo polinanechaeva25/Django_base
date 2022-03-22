@@ -18,16 +18,12 @@ def index(request):
     products = Product.objects.all()[:3]
     categories = ProductCategory.objects.all()
     category_id = random.sample(list(categories), 1)[0]
-    cart = []
-    if request.user.is_authenticated:
-        cart = Cart.objects.filter(user=request.user)
 
     return render(request, 'mainapp/index.html', context={
         'menu_links': MENU_LINKS,
         'title': 'магазин',
         'class_name': 'slider',
         'products': products,
-        'cart': cart,
         'category_id': category_id.id,
     })
 
@@ -43,16 +39,13 @@ def contact(request):
         {'city': 'Москва', 'phone_number': '+7-888-888-8888', 'email': 'info@geekshop.ru',
          'address': 'В пределах МКАД'},
     ]
-    cart = []
-    if request.user.is_authenticated:
-        cart = Cart.objects.filter(user=request.user)
 
     return render(request, 'mainapp/contact.html', context={
         'menu_links': MENU_LINKS,
         'title': 'контакты',
         'class_name': 'hero',
         'products': products,
-        'cart': cart,
+
     })
 
 
@@ -73,13 +66,6 @@ def product(request, pk):
     return render(request, 'mainapp/product.html', content)
 
 
-def get_cart(user):
-    if user.is_authenticated:
-        return Cart.objects.filter(user=user)
-    else:
-        return []
-
-
 def get_hot_product():
     products = Product.objects.all()
 
@@ -93,9 +79,6 @@ def get_same_products(hot_product):
 
 
 def products(request, pk=None, page=1):
-    cart = get_cart(request.user)
-    if request.user.is_authenticated:
-        cart = Cart.objects.filter(user=request.user)
 
     if not pk:
         if pk == 0:
@@ -143,7 +126,6 @@ def products(request, pk=None, page=1):
         'products_paginator': products_paginator,
         'image': image,
         'selected_category': selected_category_dict,
-        'cart': cart,
         'categories': categories,
         'hot_product': hot_product,
         'same_products': same_products,

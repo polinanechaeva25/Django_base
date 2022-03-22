@@ -1,0 +1,14 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?0J/QvtC00YLQstC10YDQttC00LXQvdC40LUg0YPRh9C10YLQvdC+0Lkg0LfQsNC/?=
+ =?utf-8?b?0LjRgdC4INCQ0L3QuNGH0LrQsA==?=
+From: django@geekshop.local
+To: anna@mail.ru
+Date: Tue, 22 Mar 2022 09:08:35 -0000
+Message-ID: <164794011562.1620.13407142414287756411@LAPTOP-ISJ4C6EN>
+
+Для подтверждения учетной записи Аничка на портале     http://localhost:8000 перейдите по ссылке: 
+http://localhost:8000/auth/verify/anna@mail.ru/9c1d66ba479894cf497a17489fabbf299c3ee58a/
+-------------------------------------------------------------------------------

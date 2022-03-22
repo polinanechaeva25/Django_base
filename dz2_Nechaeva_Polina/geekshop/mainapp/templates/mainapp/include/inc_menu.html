@@ -28,6 +28,8 @@
         <a href="{% url 'auth:logout' %}">выйти</a>
         {% else %}
         <a href="{% url 'auth:login' %}">войти</a>
+        <a href="{% url 'auth:register' %}">регистрация</a>
+
         {% endif %}
     </li>
 

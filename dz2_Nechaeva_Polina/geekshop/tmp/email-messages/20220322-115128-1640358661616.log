@@ -1,0 +1,14 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?0J/QvtC00YLQstC10YDQttC00LXQvdC40LUg0YPRh9C10YLQvdC+0Lkg0LfQsNC/?=
+ =?utf-8?b?0LjRgdC4IExvbG8=?=
+From: django@geekshop.local
+To: lolo@gmail.ru
+Date: Tue, 22 Mar 2022 08:51:28 -0000
+Message-ID: <164793908886.14712.3136383485090648106@LAPTOP-ISJ4C6EN>
+
+Для подтверждения учетной записи Lolo на портале     http://localhost:8000 перейдите по ссылке: 
+http://localhost:8000/auth/verify/lolo@gmail.ru/b70dd6246a910a395d7b49415391dcac3ce933ce/
+-------------------------------------------------------------------------------

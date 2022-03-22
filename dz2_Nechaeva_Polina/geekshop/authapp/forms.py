@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from .models import ShopUser
 from django import forms
+import random, hashlib
 
 
 class ShopUserLoginForm(AuthenticationForm):
@@ -34,6 +35,16 @@ class ShopUserRegisterForm(CountryRestrictionMixin, UserCreationForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
             field.help_text = ''
+
+    def save(self):
+        user = super(ShopUserRegisterForm, self).save()
+
+        user.is_active = False
+        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:6]
+        user.activation_key = hashlib.sha1((user.email +
+                                            salt).encode('utf8')).hexdigest()
+        user.save(update_fields=['is_active', 'activation_key'])
+        return user
 
 
 class ShopUserEditForm(CountryRestrictionMixin, UserChangeForm):
