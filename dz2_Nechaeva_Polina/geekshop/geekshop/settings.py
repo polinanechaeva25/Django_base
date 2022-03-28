@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-import os
+import os, json
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-%d$ewx1jhw33qubh_rfr8_6n2tr5r(+1b_7dh07)lq*vhgx&a2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -35,10 +35,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'mainapp',
     'authapp',
     'cartapp',
     'adminapp',
+
+    'social_django',
+
 ]
 
 MIDDLEWARE = [
@@ -49,7 +53,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
+
 
 ROOT_URLCONF = 'geekshop.urls'
 
@@ -65,6 +71,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'mainapp.context_processors.cart',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
+
             ],
         },
     },
@@ -139,14 +148,13 @@ EMAIL_PORT = '25'
 EMAIL_HOST_USER = 'django@geekshop.local'
 EMAIL_HOST_PASSWORD = 'geekshop'
 EMAIL_USE_SSL = False
-#вариант python -m smtpd -n -c DebuggingServer localhost:25
+# вариант python -m smtpd -n -c DebuggingServer localhost:25
 # EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
-#вариант логирования сообщений почты в виде файлов вместо отправки
+# вариант логирования сообщений почты в виде файлов вместо отправки
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'tmp/email-messages/'
 
-
-# Вариант работы с почтой, проверяла, все работало)
+# Вариант работы с почтой mail.ru, проверяла, все работало)
 
 # DOMAIN_NAME = 'http://localhost:8000'
 # EMAIL_HOST = 'smtp.mail.ru'
@@ -156,6 +164,34 @@ EMAIL_FILE_PATH = 'tmp/email-messages/'
 # EMAIL_USE_SSL = True
 
 
+# FOR VK
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.vk.VKOAuth2',
+)
 
+LOGIN_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = '8115351'                   # ID of app
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'ZunnyFRCbOUUrVkKOshh'   # Защищённый ключ
+SOCIAL_AUTH_VK_API_VERSION = '5.131'
+SOCIAL_AUTH_VK_IGNORE_DEFAULT_SCOPE = True
+SOCIAL_AUTH_VK_SCOPE = ['email']
+
+LOGIN_ERROR_URL = '/'
+
+# SOCIAL_AUTH_VK_OAUTH2_IGNORE_DEFAULT_SCOPE = True
+# SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.create_user',
+    'authapp.pipeline.save_user_profile',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
 
 

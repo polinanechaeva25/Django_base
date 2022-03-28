@@ -2,6 +2,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, User
 from .models import ShopUser
 from django import forms
 import random, hashlib
+from .models import ShopUserProfile
 
 
 class ShopUserLoginForm(AuthenticationForm):
@@ -61,3 +62,16 @@ class ShopUserEditForm(CountryRestrictionMixin, UserChangeForm):
             field.help_text = ''
             if field_name == 'password':
                 field.widget = forms.HiddenInput()
+
+
+class ShopUserProfileEditForm(forms.ModelForm):
+
+    class Meta:
+        model = ShopUserProfile
+        fields = ('tagline', 'aboutMe', 'gender', 'age', 'other_social_media', 'languages')
+
+    def __init__(self, *args, **kwargs):
+        super(ShopUserProfileEditForm, self).__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
