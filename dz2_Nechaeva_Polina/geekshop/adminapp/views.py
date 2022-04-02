@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 
+
 # @user_passes_test(lambda u: u.is_superuser)
 # def users(request, page=1):
 #     title = 'админка/пользователи'
@@ -39,8 +40,12 @@ class UsersListView(ListView):
 
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, *args, **kwargs):
-
         return super().dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'пользователи'
+        return context
 
 
 # @user_passes_test(lambda u: u.is_superuser)
@@ -65,6 +70,11 @@ class UserCreateView(CreateView):
     template_name = 'adminapp/user_update.html'
     success_url = reverse_lazy('admin:users')
     fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'пользователи/создание'
+        return context
 
 
 # @user_passes_test(lambda u: u.is_superuser)
@@ -99,35 +109,63 @@ class UserUpdateView(UpdateView):
         return context
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def user_delete(request, pk):
-    title = 'пользователи/удаление'
+# @user_passes_test(lambda u: u.is_superuser)
+# def user_delete(request, pk):
+#     title = 'пользователи/удаление'
+#
+#     user = get_object_or_404(ShopUser, pk=pk)
+#
+#     if request.method == 'POST':
+#         user.is_active = False
+#         user.save()
+#         return HttpResponseRedirect(reverse('admin:users'))
+#
+#     content = {'title': title, 'user_to_delete': user}
+#
+#     return render(request, 'adminapp/user_delete.html', content)
 
-    user = get_object_or_404(ShopUser, pk=pk)
+class UserDeleteView(DeleteView):
+    model = ShopUser
+    template_name = 'adminapp/user_delete.html'
+    success_url = reverse_lazy('admin:users')
+    context_object_name = 'object'
 
-    if request.method == 'POST':
-        user.is_active = False
-        user.save()
-        return HttpResponseRedirect(reverse('admin:users'))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'пользователи/удаление'
+        return context
 
-    content = {'title': title, 'user_to_delete': user}
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
 
-    return render(request, 'adminapp/user_delete.html', content)
+        return HttpResponseRedirect(self.get_success_url())
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def categories(request):
-    title = 'админка/категории'
+# @user_passes_test(lambda u: u.is_superuser)
+# def categories(request):
+#     title = 'админка/категории'
+#
+#     categories_list = ProductCategory.objects.all()
+#
+#     content = {
+#         'title': title,
+#         'objects': categories_list
+#     }
+#
+#     return render(request, 'adminapp/categories.html', content)
 
-    categories_list = ProductCategory.objects.all()
 
-    content = {
-        'title': title,
-        'objects': categories_list
-    }
+class ProductCategoryListView(ListView):
+    model = ProductCategory
+    template_name = 'adminapp/categories.html'
+    context_object_name = 'objects'
 
-    return render(request, 'adminapp/categories.html', content)
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'категории'
+        return context
 
 # @user_passes_test(lambda u: u.is_superuser)
 # def category_create(request):
@@ -171,6 +209,11 @@ class ProductCategoryCreateView(CreateView):
     success_url = reverse_lazy('admin:categories')
     fields = '__all__'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'категории/создание'
+        return context
+
 
 class ProductCategoryUpdateView(UpdateView):
     model = ProductCategory
@@ -206,11 +249,12 @@ class ProductCategoryDeleteView(DeleteView):
     success_url = reverse_lazy('admin:categories')
     context_object_name = 'object'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'категории/удаление'
+        return context
+
     def delete(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
         self.object = self.get_object()
         self.object.is_active = False
         self.object.save()
@@ -254,6 +298,24 @@ def product_create(request, pk):
     return render(request, 'adminapp/product_update.html', content)
 
 
+# class ProductCreateView(CreateView):
+#
+#     model = Product
+#     template_name = 'adminapp/product_update.html'
+#     success_url = reverse_lazy('admin:products')
+#     fields = '__all__'
+#     context_object_name = 'object'
+#     print(context_object_name)
+#
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['title'] = 'продукт/создание'
+#         print(context)
+#         return context
+
+
+
 # @user_passes_test(lambda u: u.is_superuser)
 # def product_read(request, pk):
 #     title = 'продукт/подробнее'
@@ -291,20 +353,39 @@ def product_update(request, pk):
     return render(request, 'adminapp/product_update.html', content)
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def product_delete(request, pk):
-    title = 'продукт/удаление'
+# @user_passes_test(lambda u: u.is_superuser)
+# def product_delete(request, pk):
+#     title = 'продукт/удаление'
+#
+#     product = get_object_or_404(Product, pk=pk)
+#
+#     if request.method == 'POST':
+#         product.is_active = False
+#         product.save()
+#         return HttpResponseRedirect(reverse('admin:products', args=[product.category.pk]))
+#
+#     content = {'title': title, 'product_to_delete': product}
+#
+#     return render(request, 'adminapp/product_delete.html', content)
 
-    product = get_object_or_404(Product, pk=pk)
 
-    if request.method == 'POST':
-        product.is_active = False
-        product.save()
-        return HttpResponseRedirect(reverse('admin:products', args=[product.category.pk]))
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = 'adminapp/product_delete.html'
+    success_url = reverse_lazy('admin:products')
+    context_object_name = 'object'
 
-    content = {'title': title, 'product_to_delete': product}
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'продукты/удаление'
+        return context
 
-    return render(request, 'adminapp/product_delete.html', content)
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 @login_required
@@ -319,7 +400,7 @@ def admin_edit_products_quantity(request, pk, quantity):
         new_product.is_active = False
 
     content = {
-        'objects': Product.objects.all().filter(category = new_product.category).order_by('name'),
+        'objects': Product.objects.all().filter(category=new_product.category).order_by('name'),
 
     }
 
