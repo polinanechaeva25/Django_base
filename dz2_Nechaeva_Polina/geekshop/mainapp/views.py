@@ -57,7 +57,7 @@ def product(request, pk):
         'title': title,
         'links_menu': ProductCategory.objects.all().filter(is_active=True),
         'product': product,
-        'cart': get_cart(request.user),
+        # 'cart': get_cart(request.user),
         'menu_links': MENU_LINKS,
         'class_name': 'hero-white',
         'selected_category': product.category,

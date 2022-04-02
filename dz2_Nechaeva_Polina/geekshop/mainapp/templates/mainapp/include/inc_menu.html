@@ -1,3 +1,4 @@
+{%load static%}
 <ul class="menu">
     {% for link in menu_links %}
     <li><a href="{% url link.href %}"
@@ -12,11 +13,28 @@
     {% endfor %}
 
     {% if user.is_authenticated %}
-    <li>
-        <a href="{% url 'auth:edit' %}">
+    <div class="dropdown">
+        <span type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="true">
             {{ user.first_name|default:'Пользователь' }}
-        </a>
-    </li>
+            <span class="caret"></span>
+        </span>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="{% url 'auth:edit' %}">
+                    профиль
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'orders:orders_list' %}">
+                    заказы
+                </a>
+            </li>
+        </ul>
+
+    </div>
+
     {% endif %}
     {% if user.is_superuser %}
     <li>
@@ -34,7 +52,7 @@
     </li>
 
     <li>
-        <a href="{% url 'cart:view' %}">
+        <a href="{% url 'cart:view' %}" >
             <span>
                 Корзина /{% if cart %}
                             {{ cart.0.total_cost|floatformat:0 }} руб

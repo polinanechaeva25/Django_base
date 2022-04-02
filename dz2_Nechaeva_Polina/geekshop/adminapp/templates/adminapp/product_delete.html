@@ -5,17 +5,17 @@
 {% block content %}
   <div class="product_delete">
     Уверены, что хотите удалить
-    {% if product_to_delete.name %}
-      ({{ product_to_delete.name|title }}</b>)
+    {% if object.name %}
+      ({{ object.name|title }}</b>)
     {% endif %}
     ?
-    <form action="{% url 'admin:product_delete' product_to_delete.pk %}"
+    <form action="{% url 'admin:product_delete' object.pk %}"
           method="post">
       {% csrf_token %}
       <input class="btn btn-danger" style="margin-top: 15px;" type="submit" value="удалить">
     </form>
     <button class="btn btn-success" style="margin-top: 15px;">
-      <a href="{% url 'admin:products' product_to_delete.category.id %}">
+      <a href="{% url 'admin:products' object.category.id %}">
         Отмена
       </a>
     </button>

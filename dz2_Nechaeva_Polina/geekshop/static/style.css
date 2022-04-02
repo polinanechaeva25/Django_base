@@ -1235,3 +1235,6 @@ td:first-child {
     margin-top: 10px;
     font-weight: 500;
 }
+.dropdown{
+    display: inline-block;
+}
