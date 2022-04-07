@@ -1,6 +1,23 @@
-from django.db import models
+from django.db import models, transaction
 from django.conf import settings
 from mainapp.models import Product
+
+
+class OrderItemQuerySet(models.QuerySet):
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            if self.pk:
+                self.product.quantity -= self.quantity - self.__class__.get_item(self.pk).quantity
+            else:
+                self.product.quantity -= self.quantity
+            self.product.save()
+            super(self.__class__, self).save(*args, **kwargs)
+
+    @transaction.atomic  # Сохранить всё или ничего, аналогично с записью with transaction.atomic():
+    def delete(self, *args, **kwargs):
+        self.product.quantity += self.quantity
+        self.product.save()
+        super(self.__class__, self).delete(*args, **kwargs)
 
 
 class Order(models.Model):
@@ -48,6 +65,8 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
+    objects = OrderItemQuerySet.as_manager()
+
     order = models.ForeignKey(Order, related_name="orderitems", on_delete=models.CASCADE)
     product = models.ForeignKey(Product, verbose_name='продукт', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(verbose_name='количество', default=0)

@@ -167,6 +167,7 @@ class ProductCategoryListView(ListView):
         context['title'] = 'категории'
         return context
 
+
 # @user_passes_test(lambda u: u.is_superuser)
 # def category_create(request):
 #     title = 'категории/создание'
@@ -299,21 +300,17 @@ def product_create(request, pk):
 
 
 # class ProductCreateView(CreateView):
-#
 #     model = Product
 #     template_name = 'adminapp/product_update.html'
 #     success_url = reverse_lazy('admin:products')
 #     fields = '__all__'
 #     context_object_name = 'object'
-#     print(context_object_name)
-#
 #
 #     def get_context_data(self, **kwargs):
 #         context = super().get_context_data(**kwargs)
 #         context['title'] = 'продукт/создание'
-#         print(context)
+#
 #         return context
-
 
 
 # @user_passes_test(lambda u: u.is_superuser)
