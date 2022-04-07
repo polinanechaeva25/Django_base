@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from django.conf import settings
 from mainapp.models import Product
 
@@ -29,3 +29,22 @@ class Cart(models.Model):
         _items = Cart.objects.filter(user=self.user)
         _totalcost = sum(list(map(lambda x: x.product_cost, _items)))
         return _totalcost
+
+    @staticmethod
+    def get_item(pk):
+        return Cart.objects.filter(id=pk).first()
+
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            if self.pk:
+                self.product.quantity -= self.quantity - self.__class__.get_item(self.pk).quantity
+            else:
+                self.product.quantity -= self.quantity
+            self.product.save()
+            super(self.__class__, self).save(*args, **kwargs)
+
+    @transaction.atomic  # Сохранить всё или ничего, аналогично с записью with transaction.atomic():
+    def delete(self, *args, **kwargs):
+        self.product.quantity += self.quantity
+        self.product.save()
+        super(self.__class__, self).delete(*args, **kwargs)
