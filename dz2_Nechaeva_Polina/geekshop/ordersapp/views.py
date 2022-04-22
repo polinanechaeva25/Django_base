@@ -90,8 +90,9 @@ class OrderItemsUpdateView(TitleContextMixin,UpdateView):
                 orderitems=OrderFormSet(self.request.POST, instance=self.object)
             )
         else:
+            queryset = self.object.orderitems.select_related()
             context.update(
-                orderitems=OrderFormSet(instance=self.object)
+                orderitems=OrderFormSet(instance=self.object, queryset=queryset)
             )
 
         return context

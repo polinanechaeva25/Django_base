@@ -14,19 +14,33 @@ MENU_LINKS = [
 ]
 
 
-def index(request):
-    products = Product.objects.all()[:3]
-    categories = ProductCategory.objects.all()
-    category_id = random.sample(list(categories), 1)[0]
+# def index(request):
+#     products = Product.objects.all()[:3]
+#     categories = ProductCategory.objects.all()
+#     category_id = random.sample(list(categories), 1)[0]
+#
+#     return render(request, 'mainapp/index.html', context={
+#         'menu_links': MENU_LINKS,
+#         'title': 'магазин',
+#         'class_name': 'slider',
+#         'products': products,
+#         'category_id': category_id.id,
+#     })
 
-    return render(request, 'mainapp/index.html', context={
+
+def index(request):
+    title = 'магазин'
+    products = Product.objects.filter(is_active=True, category__is_active=True).select_related('category')[:3]
+    categories = ProductCategory.objects.all()
+    category_id = random.sample(list(categories), 1)[0].id
+    content = {
+        'title': title,
         'menu_links': MENU_LINKS,
-        'title': 'магазин',
         'class_name': 'slider',
         'products': products,
-        'category_id': category_id.id,
-    })
-
+        'category_id': category_id,
+    }
+    return render(request, 'mainapp/index.html', content)
 
 def contact(request):
     products = [

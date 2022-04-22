@@ -10,11 +10,13 @@ from django.http import JsonResponse
 @login_required
 def cart(request):
     title = 'корзина'
-    cart_items = Cart.objects.filter(user=request.user).order_by('product__category')
+    # cart_items = Cart.objects.filter(user=request.user).order_by('product__category')
+
+    # cart_items = request.user.cart.select_related()
 
     content = {
         'title': title,
-        'cart_items': cart_items,
+        # 'cart_items': cart_items,
     }
 
     return render(request, 'cartapp/cart.html', content)
