@@ -1,16 +1,9 @@
-<div class="links clearfix">
-        <ul class="links-menu">
+{% load static %}
 
-            <li><a href="{% url 'products:category' 0 %}"
-                   class="{% if selected_category.name == 'Всё' %} active {% endif %}">всё</a></li>
+    <div class="links clearfix">
 
-            {% for category in categories %}
-            <li><a href="{% url 'products:category' category.id %}"
-                   class="{% if category.name == selected_category.name %} active {% endif %}">{{category.name}}</a>
-            </li>
-            {% endfor %}
+        {% include 'mainapp/include/inc_categories_menu.html' %}
 
-        </ul>
     </div>
 
     <div class="details-products {% if products|length > 1%} new_2 {% endif%}">

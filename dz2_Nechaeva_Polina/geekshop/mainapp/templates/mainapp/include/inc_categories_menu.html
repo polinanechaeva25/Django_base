@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+    <ul class="links-menu">
+
+        <li><a href="{% url 'products:category' 0 %}"
+               class="{% if selected_category.name == 'Всё' %} active {% endif %}">всё</a></li>
+
+        {% for category in categories %}
+        <li><a href="{% url 'products:category' category.id %}"
+               class="{% if category.name == selected_category.name %} active {% endif %}">{{category.name}}</a>
+        </li>
+        {% endfor %}
+
+    </ul>
