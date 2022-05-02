@@ -255,3 +255,5 @@ if os.name == 'posix':
     }
 LOW_CACHE = True
 
+SOUTH_TESTS_MIGRATE = False
+DST_RUN_SOUTH_MIGRATIONS = False

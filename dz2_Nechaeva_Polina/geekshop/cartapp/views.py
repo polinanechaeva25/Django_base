@@ -5,6 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django.http import JsonResponse
+from django.db.models import F
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
+from django.db import connection
 
 
 @login_required
@@ -32,9 +36,20 @@ def add_to_cart(request, pk=None):
 
     if not cart_product:
         cart_product = Cart(user=request.user, product=product)
+        cart_product.quantity += 1
+    else:
+        cart_product.quantity = F('quantity') + 1
 
-    cart_product.quantity += 1
     cart_product.save()
+
+    # queries = connection.queries
+    # [print(query['sql']) for query in queries]
+
+            #ANSWER:
+            #...
+            #UPDATE "cartapp_cart" SET "user_id" = 1, "product_id" = 13,
+                    # "quantity" = ("cartapp_cart"."quantity" + 1),
+            # "add_datetime" = '2022-04-22 19:07:07.740421', "price" = 0 WHERE "cartapp_cart"."id" = 25
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

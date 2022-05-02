@@ -46,19 +46,19 @@ class Order(models.Model):
     def __str__(self):
         return f'Текущий заказ: {self.pk}'
 
-    # @cached_property
-    # def get_items_cached(self):
-    #     return self.orderitems.select_related()
-    #
-    # # @property
-    # def get_total_quantity(self):
-    #     items = self.get_items_cached
-    #     return sum(list(map(lambda x: x.quantity, items)))
-    #
-    # # @property
-    # def get_total_cost(self):
-    #     items = self.get_items_cached
-    #     return sum(list(map(lambda x: x.get_products_cost, items)))
+    @cached_property
+    def get_items_cached(self):
+        return self.orderitems.select_related()
+
+    # @property
+    def get_total_quantity(self):
+        items = self.get_items_cached
+        return sum(list(map(lambda x: x.quantity, items)))
+
+    # @property
+    def get_total_cost(self):
+        items = self.get_items_cached
+        return sum(list(map(lambda x: x.get_products_cost, items)))
 
     # переопределяем метод, удаляющий объект
     def delete(self, using=None, keep_parents=False):

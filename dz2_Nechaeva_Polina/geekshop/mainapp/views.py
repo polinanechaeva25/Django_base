@@ -218,6 +218,3 @@ def products(request, pk=None, page=1):
         return render(request, 'mainapp/products_index.html', context)
 
     return render(request, 'mainapp/products.html', context)
-
-
-
